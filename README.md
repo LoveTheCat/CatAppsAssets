@@ -46,7 +46,7 @@ CatAppsAssets is the SSOT and public delivery surface for CatApps public static 
 ### Asset integrity rules
 
 - Binary assets must be structurally valid before they are committed or referenced by a CatApp. A filename extension and MIME type alone are not validation.
-- PNG favicons must pass: PNG signature, IHDR parse, complete chunk-boundary walk, CRC validation for every chunk, and terminal IEND with no truncation. A malformed or truncated PNG is rejected even if some viewers can decode it.
+- PNG favicons must pass: PNG signature, IHDR parse, complete chunk-boundary walk, CRC validation for every chunk, terminal IEND with no truncation, successful IDAT zlib/DEFLATE decompression, exact scanline byte-count validation for the declared dimensions/color type, and a complete pixel decode/reload with an independent image decoder. Container-level CRC validity alone is never sufficient. A malformed, truncated, or only partially decodable PNG is rejected even if some viewers can display it.
 - Canonical favicon profile: 64×64 px, PNG, 8-bit RGBA (color type 6), non-interlaced. Re-encoding is allowed to reach this profile, but visual content should not be changed merely for encoding normalization.
 - For GAS favicons, verify the public raw URL returns the intended file over HTTPS before release. CatRegistry.png is the known-good reference asset for delivery-path diagnostics; it is not a substitute for validating a new asset.
 - Asset replacement must preserve the original source separately when recovery is necessary; do not create cache-busting duplicate filenames as a substitute for integrity validation.
